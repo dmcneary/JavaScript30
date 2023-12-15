@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>JS Drum Kit</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="https://fav.farm/🔥" />
+</head>
+<body>
+
+
+  <div class="keys">
+    <div data-key="a" class="key" tabindex="0">
+      <kbd>A</kbd>
+      <span class="sound">clap</span>
+    </div>
+    <div data-key="s" class="key" tabindex="0">
+      <kbd>S</kbd>
+      <span class="sound">hihat</span>
+    </div>
+    <div data-key="d" class="key" tabindex="0">
+      <kbd>D</kbd>
+      <span class="sound">kick</span>
+    </div>
+    <div data-key="f" class="key" tabindex="0">
+      <kbd>F</kbd>
+      <span class="sound">openhat</span>
+    </div>
+    <div data-key="g" class="key" tabindex="0">
+      <kbd>G</kbd>
+      <span class="sound">boom</span>
+    </div>
+    <div data-key="h" class="key" tabindex="0">
+      <kbd>H</kbd>
+      <span class="sound">ride</span>
+    </div>
+    <div data-key="j" class="key" tabindex="0">
+      <kbd>J</kbd>
+      <span class="sound">snare</span>
+    </div>
+    <div data-key="k" class="key" tabindex="0">
+      <kbd>K</kbd>
+      <span class="sound">tom</span>
+    </div>
+    <div data-key="l" class="key" tabindex="0">
+      <kbd>L</kbd>
+      <span class="sound">tink</span>
+    </div>
+  </div>
+
+  <audio preload="auto" data-key="a" src="sounds/clap.wav"></audio>
+  <audio preload="auto" data-key="s" src="sounds/hihat.wav"></audio>
+  <audio preload="auto" data-key="d" src="sounds/kick.wav"></audio>
+  <audio preload="auto" data-key="f" src="sounds/openhat.wav"></audio>
+  <audio preload="auto" data-key="g" src="sounds/boom.wav"></audio>
+  <audio preload="auto" data-key="h" src="sounds/ride.wav"></audio>
+  <audio preload="auto" data-key="j" src="sounds/snare.wav"></audio>
+  <audio preload="auto" data-key="k" src="sounds/tom.wav"></audio>
+  <audio preload="auto" data-key="l" src="sounds/tink.wav"></audio>
+
+<script>
+	const keys = document.querySelector('.keys');
+	const KEY_STRUCT = {};
+
+	const play = keyCode => {
+		const key = document.querySelector(`div[data-key="${keyCode}"]`);
+		const audio = document.querySelector(`audio[data-key="${keyCode}"]`);
+		transition(key);
+		audio.currentTime = 0;
+		audio.play();
+	};
+
+	const transition = key => {
+		const cleanup = () => {
+			key.classList.remove('playing');
+			key.setAttribute('aria-pressed', 'false');
+			key.blur();
+		};
+		key.ontransitionend = cleanup;
+		key.classList.add('playing');
+		key.setAttribute('aria-pressed', 'true');
+		
+	};
+	
+	for (const key of keys.children) {
+		key.addEventListener('click', e => {
+			const pressedKey = e.target.closest('.key');
+			const keyCode = pressedKey.dataset.key;
+			play(keyCode);
+		});
+
+		KEY_STRUCT[key.dataset.key] = () => play(key.dataset.key);
+	}
+
+	window.addEventListener('keydown', e => {
+		const letter = e.key.toLowerCase();
+		if (KEY_STRUCT[letter]) {
+			KEY_STRUCT[letter]();
+		}
+	});
+
+</script>
+
+
+</body>
+</html>

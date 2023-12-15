@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>JS + CSS Clock</title>
+  <link rel="icon" href="https://fav.farm/🔥" />
+</head>
+<body>
+
+
+    <div class="clock">
+      <div class="clock-face">
+        <div class="hand hour-hand"></div>
+        <div class="hand min-hand"></div>
+        <div class="hand second-hand"></div>
+      </div>
+    </div>
+
+
+  <style>
+    html {
+      background: #018DED url(https://unsplash.it/1500/1000?image=881&blur=5);
+      background-size: cover;
+      font-family: 'helvetica neue';
+      text-align: center;
+      font-size: 10px;
+    }
+
+    body {
+      margin: 0;
+      font-size: 2rem;
+      display: flex;
+      flex: 1;
+      min-height: 100vh;
+      align-items: center;
+    }
+
+    .clock {
+      width: 30rem;
+      height: 30rem;
+      border: 20px solid white;
+      border-radius: 50%;
+      margin: 50px auto;
+      position: relative;
+      padding: 2rem;
+      box-shadow:
+        0 0 0 4px rgba(0,0,0,0.1),
+        inset 0 0 0 3px #EFEFEF,
+        inset 0 0 10px black,
+        0 0 10px rgba(0,0,0,0.2);
+    }
+
+    .clock-face {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transform: translateY(-3px); /* account for the height of the clock hands */
+    }
+
+    .hand {
+      width: 50%;
+      height: 7px;
+      background: black;
+      position: absolute;
+      top: 50%;
+			transform-origin: 100%;
+			transform: rotate(90deg);
+			transition: transform 0.25s cubic-bezier(0.075, 1.7, 0.7, 1);
+    }
+
+		.hand::after {
+			content: "<";
+			position: absolute;
+			right: 98%;
+			top: -8px;
+		}
+
+		.hour-hand {
+			width: 30%;
+			left: 20%;
+		}
+
+		.min-hand {
+			width: 40%;
+			left: 10%;
+		}
+
+		.second-hand {
+			width: 50%;
+			background: rgb(241, 60, 60);
+		}
+
+  </style>
+
+  <script>
+		(function(){
+			const hourHand = document.querySelector('.hour-hand');
+			const minHand = document.querySelector('.min-hand');
+			const secondHand = document.querySelector('.second-hand');
+			
+			const initClock = () => {
+				const now = new Date();
+				const secondRto = (now.getSeconds() / 60.0);
+				const minRto = (now.getMinutes() / 60.0);
+				const hourRto = (((now.getHours() % 12) / 12.0));
+				const secondHandPos = (secondRto * 360) + 90;
+				const minHandPos = (((secondRto / 60.0) + minRto) * 360) + 90;
+				const hourHandPos = (((minRto / 12.0) + hourRto) * 360) + 90;
+				secondHand.style.transform = `rotate(${secondHandPos}deg)`;
+				minHand.style.transform = `rotate(${minHandPos}deg)`;
+				hourHand.style.transform = `rotate(${hourHandPos}deg)`;
+			}
+
+			const advanceHands = () => {
+				const hourHandPos = hourHand.style.transform;
+				const minHandPos = minHand.style.transform;
+				const secondHandPos = secondHand.style.transform;
+				let hourHandPosNum = parseFloat(hourHandPos.substring(7, hourHandPos.length - 4));
+				let minHandPosNum = parseFloat(minHandPos.substring(7, minHandPos.length - 4));
+				let secondHandPosNum = parseFloat(secondHandPos.substring(7, secondHandPos.length - 4));
+
+				const moveHands = (hand, handPos, inc, limit) => {
+					if (handPos >= limit) {
+						hand.style.transition = "transform 0ms";
+						hand.style.transform = `rotate(90deg)`;
+						setTimeout(() => hand.style.transition = "transform 0.25s cubic-bezier(0.075, 1.7, 0.7, 1)", 200);
+					} else {
+						handPos += inc;
+						hand.style.transform = `rotate(${handPos}deg)`;
+					}
+				}
+
+				moveHands(secondHand, secondHandPosNum, 6, 444);
+				moveHands(minHand, minHandPosNum, 0.1, 449.5);
+				moveHands(hourHand, hourHandPosNum, (1/120.0), 449);
+				
+			};
+			setInterval(advanceHands, 1000);
+			initClock();
+		})();
+			
+
+		
+
+  </script>
+</body>
+</html>
