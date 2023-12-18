@@ -1,7 +1,7 @@
 html {
   box-sizing: border-box;
   background: #ffc600;
-  font-family: 'helvetica neue';
+  font-family: 'helvetica neue', sans-serif;
   font-size: 20px;
   font-weight: 200;
 }
@@ -67,6 +67,8 @@ input.search {
 
 span.population {
   font-size: 15px;
+	display: flex;
+  align-items: center;
 }
 
 .hl {

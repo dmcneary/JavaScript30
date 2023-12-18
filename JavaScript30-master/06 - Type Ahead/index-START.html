@@ -16,8 +16,54 @@
     </ul>
   </form>
 <script>
-const endpoint = 'https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json';
+	const endpoint = 'https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json';
 
+	const cities = [];
+	const input = document.querySelector('.search');
+	const list = document.querySelector('.suggestions');
+
+	fetch(endpoint)
+	.then(blob => blob.json())
+	.then(json => cities.push(...json));
+
+	const numberWithCommas = x => x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+	const cityFilter = (element, regex) => element.city.match(regex) || element.state.match(regex);
+
+	const generateListItem = (element, input, regex) => {
+		const {city, state, population} = element;
+		const item = document.createElement('li');
+		const citySpan = document.createElement('span');
+		const popSpan = document.createElement('span');
+		const hl = `<span class="hl">${input}</span>`;
+		
+		citySpan.classList.add('name');
+		popSpan.classList.add('population');
+
+		citySpan.innerHTML = `${city.replace(regex, hl)}, ${state.replace(regex, hl)}`;
+		popSpan.textContent = numberWithCommas(population);
+		
+		item.appendChild(citySpan);
+		item.appendChild(popSpan);
+		
+		return item;
+	}
+
+	const handleInput = word => {
+		const regex = new RegExp(word, 'gi');
+		const results = word ? cities.filter(el => cityFilter(el, regex)) : null;
+		const defaultHtml = `
+			<li>Filter for a city</li>
+      <li>or a state</li>
+		`;
+		if (results) {
+			const newList = results.map(city => generateListItem(city, word, regex));
+			list.replaceChildren(...newList);
+		} else {
+			list.innerHTML = defaultHtml;
+		}
+	}
+
+	input.addEventListener('input', e => handleInput(e.target.value));
 </script>
 </body>
 </html>
