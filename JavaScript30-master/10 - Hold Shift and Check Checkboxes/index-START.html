@@ -97,6 +97,31 @@
   </div>
 
 <script>
+	const items = Array.from(document.querySelectorAll('.item'));
+	let clicked = -1;
+
+	items.forEach(item => {
+		item.addEventListener('click', handleItemClick);
+	});
+
+	function checkBoxes (start, end) {
+		for (let i = start; i < end; i++) {
+			items[i].querySelector('input').checked = true;
+		}
+	}
+
+	function handleItemClick (e) {
+		const checked = this.querySelector('input').checked;
+
+		if (checked) {
+			const idx = items.indexOf(this);
+			if (e.shiftKey && clicked >= 0) {
+				if (idx < clicked) checkBoxes(idx, clicked)
+				else checkBoxes(clicked, idx);
+			}
+			clicked = idx;
+		}
+	}
 </script>
 </body>
 </html>
