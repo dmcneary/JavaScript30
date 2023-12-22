@@ -19,29 +19,43 @@
     }
 
     // Regular
-
+		console.log('Regular console.log');
     // Interpolated
-
+		console.log('%s console.log()', 'interpolated');
     // Styled
-
+		console.log('%c Styled console.log()', 'background-color: black; color: #fff;');
     // warning!
-
+		console.warn('WARNING');
     // Error :|
-
+		console.error('ERROR')
     // Info
-
+		console.info('Dogs are great')
     // Testing
-
+		console.assert(dogs.length === 3, 'NEEDS MORE DOGZ');
     // clearing
-
+		//console.clear();
     // Viewing DOM Elements
-
+		console.dir(window);
     // Grouping together
-
+		dogs.forEach((dog, i) => {
+			console.group(`Dog #${i}:`);
+			console.log(`Name: ${dog.name}`);
+			console.log(`Age: ${dog.age}`);
+			console.groupEnd(`Dog #${i}:`);
+		})
     // counting
-
+		for (let i = 0; i < 10; i++) {
+			console.count('looped');
+		}
+		
     // timing
-
+		console.time('Fetched data');
+		fetch('https://api.github.com/users/dmcneary')
+		.then(blob => blob.json())
+		.then(data => {
+			console.timeEnd('Fetched data');
+			console.log(data);
+		})
   </script>
 </body>
 </html>
