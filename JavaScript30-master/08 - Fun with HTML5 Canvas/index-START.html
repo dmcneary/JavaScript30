@@ -8,7 +8,54 @@
 <body>
 <canvas id="draw" width="800" height="800"></canvas>
 <script>
+	const canvas = document.querySelector('#draw');
+	const ctx = canvas.getContext('2d');
+	const modes = ['exclusion', 'difference', 'soft-light', 'hard-light', 'multiply', 'screen'];
+	canvas.width = window.innerWidth;
+	canvas.height = window.innerHeight;
+
+	ctx.strokeStyle = '#DEDA55';
+	ctx.lineJoin = 'round';
+	ctx.lineCap = 'square';
+	ctx.lineWidth = 10;
+	ctx.globalCompositeOperation = modes[Math.floor(Math.random() * modes.length)];
+
+	let isDrawing = false;
+	let lastX, lastY;
+	let hue = 0, sat = 100, light = 50;
+	let growingWidth = true;
+
+	const reset = e => {
+		isDrawing = false;
+	}
+
+	const draw = e => {
+		if (!isDrawing) return;
+		
+		ctx.strokeStyle = `hsl(${hue}, ${sat}%, ${light}%)`;
+		ctx.beginPath();
+		ctx.moveTo(lastX, lastY);
+		ctx.lineTo(e.offsetX, e.offsetY);
+		ctx.stroke();
+		hue = Math.round(Math.random() * 360);
+		sat = Math.round(Math.random() * 100);
+		light= Math.round(Math.random() * 100);
+		//hue = (hue < 360) ? hue+1 : 0;
+		if (ctx.lineWidth >= 125 || ctx.lineWidth <= 1) growingWidth = !growingWidth;
+		ctx.globalCompositeOperation = modes[Math.floor(Math.random() * modes.length)];
+		ctx.lineWidth = growingWidth ? ctx.lineWidth+1 : ctx.lineWidth-1;
+		[lastX, lastY] = [e.offsetX, e.offsetY];
+	}
+
+	canvas.addEventListener('mousemove', draw);
+	canvas.addEventListener('mousedown', e => {
+		[lastX, lastY] = [e.offsetX, e.offsetY];
+		isDrawing = true;
+	});
+	canvas.addEventListener('mouseup', reset);
+	canvas.addEventListener('mouseout', reset);
 </script>
+	
 
 <style>
   html, body {
