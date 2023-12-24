@@ -4,10 +4,9 @@ const controls = player.querySelector('.player__controls');
 const progressBar = controls.querySelector('.progress');
 const progressBarFilled = progressBar.querySelector('.progress__filled');
 const playBtn = controls.querySelector('.player__button');
-const volumeCtl = controls.querySelector('input[name="volume"]');
-const rateCtl = controls.querySelector('input[name="playbackRate"]');
-const skipBackBtn = controls.querySelector('button[data-skip="-10"]');
-const skipForwardBtn = controls.querySelector('button[data-skip="25"]');
+const sliders = controls.querySelectorAll('input[type="range"]');
+const skipBtns = controls.querySelectorAll('[data-skip]');
+const fullscreen = controls.querySelector('[data-function="fullscreen"]');
 
 const updateProgressBar = e => {
 	const percent = (video.currentTime / video.duration) * 100;
@@ -17,11 +16,11 @@ const updateProgressBar = e => {
 const togglePlay = e => {
 	if (video.paused) {
 		video.play();
-		playBtn.textContent = "||";
+		playBtn.textContent = "\u23F8";
 	}
 	else {
 		video.pause();
-		playBtn.textContent = "►"
+		playBtn.textContent = "\u23F5"
 	}
 };
 
@@ -46,6 +45,11 @@ const seek = e => {
 	updateProgressBar(null);
 };
 
+const toggleFullscreen = e => {
+	console.dir(video);
+	video.webkitEnterFullscreen();
+}
+
 let dragging = false;
 progressBar.addEventListener('click', seek);
 progressBar.addEventListener('mousemove', (e) => dragging && seek(e));
@@ -55,7 +59,11 @@ video.addEventListener('play', updateProgressBar);
 video.addEventListener('click', togglePlay);
 video.addEventListener('timeupdate', updateProgressBar);
 playBtn.addEventListener('click', togglePlay);
-volumeCtl.addEventListener('change', handleSliderChange);
-rateCtl.addEventListener('change', handleSliderChange);
-skipBackBtn.addEventListener('click', skip);
-skipForwardBtn.addEventListener('click', skip);
+sliders.forEach(range => range.addEventListener('change', handleSliderChange));
+skipBtns.forEach(btn => btn.addEventListener('click', skip));
+fullscreen.addEventListener('click', () => {
+	if (video.requestFullscreen) video.requestFullscreen();
+	else if (video.webkitRequestFullscreen) video.webkitRequestFullscreen();
+	else if (video.msRequestFullScreen) video.msRequestFullScreen(); 
+	else console.warn('Fullscreen not supported in this browser.')
+});
