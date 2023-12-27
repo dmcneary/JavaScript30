@@ -7,6 +7,23 @@
     <link rel="icon" href="https://fav.farm/🔥" />
   </head>
   <body>
-    <script></script>
+    <script>
+			const stack = [];
+			const secret = "lololol";
+
+			const checkSequence = e => {
+				stack.push(e.key);
+				if (stack.length >= secret.length) {
+					const scan = stack.slice((stack.length - secret.length), stack.length);
+					if (scan.join('') === secret) {
+						cornify_add();
+						stack.length = 0;
+					}
+				}
+				if (stack.length > ((secret.length * 2) - 1)) stack.length = 0;
+			}
+
+			document.addEventListener('keydown', checkSequence);
+		</script>
   </body>
 </html>

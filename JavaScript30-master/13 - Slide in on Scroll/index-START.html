@@ -59,6 +59,19 @@
       };
     }
 
+		const slideImages = document.querySelectorAll('.slide-in');
+		const slideActivate = function (e) {
+			for (const image of slideImages) {
+				const top = window.scrollY - image.offsetTop;
+				const halfWindow = window.innerHeight / 1.25;
+				if (!image.classList.contains('active') && top + halfWindow >= 0) {
+					image.classList.add('active');
+				}
+			}
+		}
+		
+		window.addEventListener('scroll', debounce(slideActivate));
+
   </script>
 
   <style>
