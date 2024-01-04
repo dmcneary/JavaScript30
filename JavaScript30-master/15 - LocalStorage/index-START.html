@@ -23,13 +23,98 @@
     <form class="add-items">
       <input type="text" name="item" placeholder="Item Name" required>
       <input type="submit" value="+ Add Item">
+			<div class="all-items-controls">
+				<button name="check-all">Check All</button>
+				<button name="uncheck-all">Uncheck All</button>
+				<button name="clear-all">Clear List</button>
+			</div>
     </form>
   </div>
 
 <script>
   const addItems = document.querySelector('.add-items');
   const itemsList = document.querySelector('.plates');
-  const items = [];
+	const itemsControls = addItems.querySelector('.all-items-controls');
+
+	function addItem(e) {
+		e.preventDefault();
+		const items = JSON.parse(localStorage.getItem('items')) || [];
+		
+		const itemInput = e.target.querySelector('input[name="item"]');
+		
+		const itemData = {
+			label: itemInput.value,
+			done: false
+		}
+		
+		if (itemData.label) { 
+			items.push(itemData);
+		};
+		console.log(items);
+
+		localStorage.setItem('items', JSON.stringify(items));
+		displayItems();
+		this.reset();
+	}
+
+	function displayItems() {
+		const items = JSON.parse(localStorage.getItem('items'));
+		if (!items) {
+			itemsList.innerHTML = "<p>Please add a plate using the form below</p>";
+			return;
+		}
+
+		let html = '';
+		
+		items.forEach((item, i) => {
+			html += `
+				<li>
+					<input type="checkbox" data-index="${i}" id="item-${i}" ${item.done ? 'checked' : ''} />
+					<label for="item-${i}">${item.label}</label>
+				</li>
+			`;
+		});
+
+		itemsList.innerHTML = html;
+	}
+
+	function toggleDone({target}) {
+		console.log(target)
+		if (!target.matches('input')) return;
+
+		const items = JSON.parse(localStorage.getItem('items'));
+		const index = target.dataset.index;
+		items[index].done = !items[index].done;
+
+		localStorage.setItem('items', JSON.stringify(items));
+		displayItems();
+	}
+
+	function handleControlClick (e) {
+		e.preventDefault();
+
+		function toggleAllItems (bool) {
+			const items = JSON.parse(localStorage.getItem('items'));
+			for (const item of items) {
+				item.done = bool;
+			}
+			localStorage.setItem('items', JSON.stringify(items));
+		}
+
+		switch (e.target.name) {
+			case 'check-all': toggleAllItems(true); break;
+			case 'uncheck-all': toggleAllItems(false); break;
+			case 'clear-all': localStorage.clear(); break;
+		}
+		
+		displayItems();
+	}
+
+	addItems.addEventListener('submit', addItem);
+	itemsList.addEventListener('click', toggleDone);
+	itemsControls.addEventListener('click', handleControlClick);
+
+	displayItems();
 
 </script>
 
