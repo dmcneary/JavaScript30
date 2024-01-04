@@ -48,8 +48,19 @@
 
 <script>
 const bands = ['The Plot in You', 'The Devil Wears Prada', 'Pierce the Veil', 'Norma Jean', 'The Bled', 'Say Anything', 'The Midway State', 'We Came as Romans', 'Counterparts', 'Oh, Sleeper', 'A Skylit Drive', 'Anywhere But Here', 'An Old Dog'];
+const list = document.querySelector('#bands');
+const articleRegex = /^(?:(a|the|an) +)/gi;
 
+const stripArticles = str => str.replace(articleRegex, '').trim();
+const sortFn = (a, b) => stripArticles(a).localeCompare(stripArticles(b));
 
+bands.sort((a, b) => sortFn(a,b));
+
+for (const band of bands) {
+	list.innerHTML += `
+		<li>${band}</li>
+	`;
+}
 </script>
 
 </body>
