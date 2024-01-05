@@ -183,6 +183,31 @@
     </li>
   </ul>
 <script>
+	/* pull times out of the dom, convert them to nums & 
+	make them into mins and secs, and sum for total HH:MM:SS. 
+	Log the result to console.*/
+	const parseTimeToStr = seconds => {
+		const hrs = Math.floor(seconds / 3600);
+		const mins = Math.floor((seconds % 3600) / 60);
+		const secs = (seconds % 3600) % 60;
+
+		return [
+			`${hrs}`.padStart(2, '0'), 
+			`${mins}`.padStart(2, '0'), 
+			`${secs}`.padStart(2, '0')
+		].join(':');
+	}
+
+	const items = document.querySelectorAll('.videos li[data-time]');
+
+	const sumSeconds = [...document.querySelectorAll('.videos li[data-time]')]
+		.map(el => el.dataset.time.split(':'))
+		.reduce((prev, curr) => {
+			const [mins, secs] = curr.map(el => parseInt(el));
+			return prev + secs + (mins * 60);
+		}, 0);
+
+	console.log(parseTimeToStr(sumSeconds));
 </script>
 </body>
 </html>
