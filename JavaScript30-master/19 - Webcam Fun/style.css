@@ -25,9 +25,21 @@ html {
   clear: both;
 }
 
+.controls {
+	padding: 1em;
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	justify-content: start;
+	gap: 1em 2em;
+}
+
 .photo {
-  width: 100%;
-  float: left;
+	position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+  height: 75vh;
+	width: auto;
 }
 
 .player {
