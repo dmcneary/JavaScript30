@@ -60,7 +60,7 @@
     .hand {
       width: 50%;
       height: 7px;
-      background: black;
+      background: white;
       position: absolute;
       top: 50%;
 			transform-origin: 100%;
@@ -69,10 +69,14 @@
     }
 
 		.hand::after {
-			content: "<";
+			content: "";
 			position: absolute;
-			right: 98%;
-			top: -8px;
+			right: 86%;
+			top: -18px;
+			transform: rotate(45deg);
+			border-width: 16px 16px 16px 0px;
+			border-style: solid;
+			border-color: transparent transparent bisque transparent;
 		}
 
 		.hour-hand {
@@ -87,7 +91,7 @@
 
 		.second-hand {
 			width: 50%;
-			background: rgb(241, 60, 60);
+			background: rgb(243, 148, 148);
 		}
 
   </style>

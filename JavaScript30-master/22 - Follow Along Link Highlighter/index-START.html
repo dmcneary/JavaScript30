@@ -28,6 +28,19 @@
 
   <script>
     // 👀👀👀👀👀👀👀👀👀👀👀👀👀👀👀
+		const links = document.querySelectorAll('a');
+		const highlightSpan = document.createElement('span');
+		highlightSpan.classList.add('highlight');
+		document.body.appendChild(highlightSpan);
+
+		const hoverEffect = function() {
+			const { width, height, top, left } = this.getBoundingClientRect();
+
+			highlightSpan.style.width = `${width}px`;
+    	highlightSpan.style.height = `${height}px`;
+    	highlightSpan.style.transform = `translate(${left + window.scrollX}px, ${top + window.scrollY}px)`;
+		}
+		links.forEach(link => link.addEventListener('mouseover', hoverEffect));
   </script>
 </body>
 </html>
