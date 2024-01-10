@@ -12,7 +12,7 @@
 
   <h1 class="speed">
     <span class="speed-value">0</span>
-    <span class="units">KM/H</span>
+    <span class="units">MPH</span>
   </h1>
 
   <style>
@@ -60,6 +60,30 @@
     /*Compass: https://thenounproject.com/search/?q=compass&i=592352*/
   </style>
   <script>
+		const compass = document.querySelector('.arrow');
+		const speed = document.querySelector('.speed-value');
+		const coordinates = document.createElement('span');
+		coordinates.style.fontSize = '24px';
+		coordinates.style.color = 'white';
+		coordinates.style.fontWeight = '300';
+		document.querySelector('body').appendChild(coordinates);
+
+		const posSuccess = ( {coords} ) => {
+			compass.style.transform = `rotate(${coords.heading}deg)`;
+			speed.textContent = Math.round(Number(coords.speed) * 2.237);
+			coordinates.textContent = `lat: ${coords.latitude.toFixed(4)} | lon: ${coords.longitude.toFixed(4)}`;
+		}
+
+		const posError = err => {
+			const errorSpan = document.createElement('span');
+			const h1 = document.querySelector('.speed');
+			errorSpan.textContent = `An error occurred! ${err}`;
+			errorSpan.style.color = 'red';
+			h1.appendChild(errorSpan);
+			console.error(err);
+		}
+
+		navigator.geolocation.watchPosition(posSuccess, posError);
   </script>
 </body>
 </html>
