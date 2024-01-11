@@ -31,11 +31,49 @@
 
 <script>
   const msg = new SpeechSynthesisUtterance();
-  let voices = [];
-  const voicesDropdown = document.querySelector('[name="voice"]');
+	let voices = speechSynthesis.getVoices();
+	const voicesDropdown = document.querySelector('[name="voice"]');
   const options = document.querySelectorAll('[type="range"], [name="text"]');
   const speakButton = document.querySelector('#speak');
   const stopButton = document.querySelector('#stop');
+	msg.text = document.querySelector('[name="text"]').value;
+
+  const populateVoicesList = () => {
+		voices = speechSynthesis.getVoices();
+		console.log(voices);
+		voicesDropdown.innerHTML =  voices.map(voice => (
+			`<option value="${voice.name}" data-lang="${voice.lang}">
+				${voice.name} (${voice.lang})
+			</option>`)
+		).join('')
+	}
+
+	const setVoice = e => {
+		const selectedVoice = e.target.selectedOptions[0];
+		msg.voice = voices.find(voice => voice.name === selectedVoice.value);
+		msg.lang = selectedVoice.dataset.lang;
+		startSpeaking();
+	}
+
+	const startSpeaking = () => {
+		speechSynthesis.cancel();
+		if (!msg.voice) msg.voice = voices.find(voice => voice.name === voicesDropdown.selectedOptions[0].value);
+		msg.lang = voicesDropdown.selectedOptions[0].dataset.lang;
+		options.forEach(option => msg[option.name] = option.value);
+		speechSynthesis.speak(msg);
+	}
+
+	const adjustSpeech = e => {
+		msg[e.target.name] = e.target.value;
+		startSpeaking();
+	}
+
+	speechSynthesis.addEventListener('voiceschanged', populateVoicesList);
+	voicesDropdown.addEventListener('change', setVoice);
+	options.forEach(slider => slider.addEventListener('change', adjustSpeech));
+	speakButton.addEventListener('click', () => startSpeaking(true));
+	stopButton.addEventListener('click', () => speechSynthesis.cancel());
+	
 </script>
 
 </body>
