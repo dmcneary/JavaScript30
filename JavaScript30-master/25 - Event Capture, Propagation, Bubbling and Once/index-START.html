@@ -41,9 +41,18 @@
   }
 </style>
 
-<button></button>
+<button>Checkout</button>
 <script>
+	const divs = document.querySelectorAll('div');
+	const button = document.querySelector('button');
 
+	function logClick(e) {
+		e.stopPropagation();
+		console.log(this.classList.value);
+	}
+
+	divs.forEach(div => div.addEventListener('click', logClick, { capture : false }));
+	button.addEventListener('click', () => console.log('clicked'), { once: true });
 </script>
 </body>
 </html>
