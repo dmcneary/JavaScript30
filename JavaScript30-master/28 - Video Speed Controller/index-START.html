@@ -21,14 +21,13 @@
 	const video = document.querySelector('.flex');
 
 	let isDown = false, inBounds = false;
-	const adjustSpeed = () => {
-		console.dir(video);
-	}
+	const max = 4, min = 0.4;
+	const {offsetTop: barTop, offsetHeight: barHeight} = speed;
 
 	const adjustSpeedBar = y => {
-		const offset = y - speed.offsetTop;
-		const percent = Math.round((offset / speed.offsetHeight) * 100);
-		const scale = (((offset/ speed.offsetHeight) * 3.6) + 0.4).toFixed(1);
+		const ratio = (y - barTop) / barHeight;
+		const percent = Math.round(ratio * 100);
+		const scale = ((ratio * (max - min)) + min).toFixed(1);
 		bar.style.height = `${percent}%`;
 		bar.textContent = `${scale}×`
 		video.playbackRate = scale;
