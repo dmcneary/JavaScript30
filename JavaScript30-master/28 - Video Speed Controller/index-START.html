@@ -9,13 +9,47 @@
 <body>
 
   <div class="wrapper">
-    <video class="flex" width="765" height="430" src="http://clips.vorwaerts-gmbh.de/VfE_html5.mp4" loop controls></video>
+    <video class="flex" width="765" height="430" src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4" loop controls></video>
     <div class="speed">
       <div class="speed-bar">1×</div>
     </div>
   </div>
 
 <script>
+	const speed = document.querySelector('.speed');
+	const bar = speed.querySelector('.speed-bar');
+	const video = document.querySelector('.flex');
+
+	let isDown = false, inBounds = false;
+	const adjustSpeed = () => {
+		console.dir(video);
+	}
+
+	const adjustSpeedBar = y => {
+		const offset = y - speed.offsetTop;
+		const percent = Math.round((offset / speed.offsetHeight) * 100);
+		const scale = (((offset/ speed.offsetHeight) * 3.6) + 0.4).toFixed(1);
+		bar.style.height = `${percent}%`;
+		bar.textContent = `${scale}×`
+		video.playbackRate = scale;
+	}
+
+	const handleMouseDown = e => {
+		isDown = true;
+		if (inBounds) adjustSpeedBar(e.pageY);
+	}
+
+	const handleMouseMove = e => {
+		if (!(isDown && inBounds)) return;
+		e.preventDefault();
+		adjustSpeedBar(e.pageY);
+	}
+
+	speed.addEventListener('mousedown', handleMouseDown);
+	window.addEventListener('mouseup', () => isDown = false);
+	speed.addEventListener('mouseenter', () => inBounds = true);
+	speed.addEventListener('mouseleave', () => inBounds = false);
+	speed.addEventListener('mousemove', handleMouseMove);
 </script>
 </body>
 </html>
